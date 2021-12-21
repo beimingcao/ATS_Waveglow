@@ -25,7 +25,6 @@ articulatory_data:
   MVN: False
   delta: True
   Procrustes: False
-  pad_end: True
 
 training_setup:
   hidden_size: 256
