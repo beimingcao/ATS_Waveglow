@@ -101,8 +101,5 @@ if __name__ == '__main__':
 
         train_LSTM(test_SPK, train_dataset, valid_dataset, args.buff_dir, args)    
 
-        te = open(os.path.join(data_path_SPK, 'test_data.pkl'), 'rb')
-        test = pickle.load(te)
-
 
 
