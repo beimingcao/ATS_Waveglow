@@ -39,8 +39,9 @@ if __name__ == '__main__':
 
     exp_train_lists, exp_valid_lists, exp_test_lists = prepare_Haskins_lists(args)
 
-    for i in range(len(exp_train_lists)):
-        CV = 'CV' + format(i, '02d')
+    for i in range(len(exp_test_lists)):
+  #      CV = 'CV' + format(i, '02d')
+        CV = exp_test_lists[i][0][:3]
         CV_data_dir = os.path.join(prepared_data_CV_path, CV)
         if not os.path.exists(CV_data_dir):
             os.makedirs(CV_data_dir)
@@ -58,13 +59,14 @@ if __name__ == '__main__':
 
         if batch_size > 1:
             valid_dataset = HaskinsData_ATS(prepared_data_path, valid_list, ema_dim)
-            max_len = max(train_dataset.find_max_len(), valid_dataset.find_max_len())
+  #          max_len = max(train_dataset.find_max_len(), valid_dataset.find_max_len())
+            max_len = 340
             train_transforms.append(padding_end(max_len))
             valid_transforms.append(padding_end(max_len))    
 
         train_dataset = HaskinsData_ATS(prepared_data_path, train_list, ema_dim, transforms = Pair_Transform_Compose(train_transforms))
-        valid_dataset = HaskinsData_ATS(prepared_data_path, train_list, ema_dim, transforms = Pair_Transform_Compose(valid_transforms))
-        test_dataset = HaskinsData_ATS(prepared_data_path, train_list, ema_dim, transforms = Pair_Transform_Compose(test_transforms))
+        valid_dataset = HaskinsData_ATS(prepared_data_path, valid_list, ema_dim, transforms = Pair_Transform_Compose(valid_transforms))
+        test_dataset = HaskinsData_ATS(prepared_data_path, test_list, ema_dim, transforms = Pair_Transform_Compose(test_transforms))
 
         train_pkl_path = os.path.join(CV_data_dir, 'train_data.pkl')
         tr = open(train_pkl_path, 'wb')
@@ -75,11 +77,3 @@ if __name__ == '__main__':
         test_pkl_path = os.path.join(CV_data_dir, 'test_data.pkl')
         te = open(test_pkl_path, 'wb')
         pickle.dump(test_dataset, te)
-
-
-#        filehandler = open(os.path.join(CV_data_dir, 'test_data.pkl'), 'rb') 
-#        dataset = pickle.load(filehandler)
-#        file_id, ema, wav = dataset[0]
-
-
-

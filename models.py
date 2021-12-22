@@ -9,7 +9,7 @@ import numpy as np
 def save_model(model, outpath):
     from torch import save
     from os import path
-    return save(model.state_dict(), path.join(outpath, 'lstm.th'))
+    return save(model.state_dict(), outpath)
 
 
 def load_model():
