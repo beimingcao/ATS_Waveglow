@@ -7,7 +7,7 @@ experimental_setup:
   experiment_type: 'SD'
 
 data_setup:
-  spk_list: ['F01', 'F02', 'F03', 'F04', 'M01', 'M02', 'M03', 'M04'] # ['F01', 'F02', 'F03', 'F04', 'M01', 'M02', 'M03', 'M04']
+  spk_list: ['F01'] # ['F01', 'F02', 'F03', 'F04', 'M01', 'M02', 'M03', 'M04']
 
 acoustic_feature:
   sampling_rate: 22050 
@@ -30,8 +30,8 @@ training_setup:
   hidden_size: 256
   layer_num: 3
   batch_size: 16
-  learning_rate: 0.0005
-  num_epoch: 5
+  learning_rate: 0.00005
+  num_epoch: 30
 
 testing_setup:
   save_model: True

@@ -32,17 +32,22 @@ def test_LSTM(test_SPK, test_dataset, exp_output_folder, args):
         x, y = x.type(torch.FloatTensor), y.type(torch.FloatTensor)
         h, c = model.init_hidden(x)
         y_head = model(x, h, c)
+        y_pt = y_head.squeeze(0).T
 
         if save_output == True:
             outpath = os.path.join(test_out_folder, test_SPK)
             if not os.path.exists(outpath):
                 os.makedirs(outpath)
-            torch.save(y_head.squeeze(0), os.path.join(outpath, file_id[0] + '.pt'))
+            torch.save(y_pt, os.path.join(outpath, file_id[0] + '.pt'))
 
         acc_vals.append(metric(y_head, y))
     avg_vacc = sum(acc_vals) / len(acc_vals) 
 
-    results = os.path.join(test_out_folder, test_SPK + '_results.txt')
+    results_out_folder = os.path.join(exp_output_folder, 'RESULTS')
+    if not os.path.exists(results_out_folder):
+        os.makedirs(results_out_folder)
+
+    results = os.path.join(results_out_folder, test_SPK + '_results.txt')
     with open(results, 'w') as r:
         print('MCD = %0.3f' % avg_vacc, file = r)
     r.close()
