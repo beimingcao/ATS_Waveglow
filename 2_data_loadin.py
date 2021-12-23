@@ -52,7 +52,7 @@ if __name__ == '__main__':
 
         train_dataset = HaskinsData_ATS(prepared_data_path, train_list, ema_dim)
         if MVN == True:
-            ema_mean, ema_std = train_dataset.compute_ema_mean_std()
+            EMA_mean, EMA_std = train_dataset.compute_ema_mean_std()
             train_transforms.append(apply_EMA_MVN(EMA_mean, EMA_std))
             valid_transforms.append(apply_EMA_MVN(EMA_mean, EMA_std))
             test_transforms.append(apply_EMA_MVN(EMA_mean, EMA_std))

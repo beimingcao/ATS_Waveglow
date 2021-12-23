@@ -45,7 +45,6 @@ def train_LSTM(test_SPK, train_dataset, valid_dataset, exp_output_folder, args):
             acc_vals = []
             for file_id, x, y in train_data:
                 x, y = x.type(torch.FloatTensor).to(device), y.type(torch.FloatTensor).to(device)
-
                 h, c = model.init_hidden(x)
                 h, c = h.to(device), c.to(device)
                 y_head = model(x, h, c)
@@ -63,6 +62,8 @@ def train_LSTM(test_SPK, train_dataset, valid_dataset, exp_output_folder, args):
             acc_vals = []
             for file_id, x, y in valid_data:
                 x, y = x.type(torch.FloatTensor).to(device), y.type(torch.FloatTensor).to(device)
+                h, c = model.init_hidden(x)
+                h, c = h.to(device), c.to(device)
                 acc_vals.append(metric(model(x, h, c), y))
             avg_vacc = sum(acc_vals) / len(acc_vals)
             SPK = file_id[0][:3]
