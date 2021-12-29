@@ -8,6 +8,7 @@ from models import MyLSTM
 from models import RegressionLoss
 from models import save_model
 from measures import MCD
+from torch.autograd import Variable
 
 def train_LSTM(test_SPK, train_dataset, valid_dataset, exp_output_folder, args):
     
@@ -30,8 +31,8 @@ def train_LSTM(test_SPK, train_dataset, valid_dataset, exp_output_folder, args):
     loss_func = RegressionLoss()
     metric = MCD()
 
-    train_data = DataLoader(train_dataset, num_workers=0, batch_size=batch_size, shuffle=True, drop_last=False)
-    valid_data = DataLoader(valid_dataset, num_workers=0, batch_size=batch_size, shuffle=True, drop_last=False)
+    train_data = DataLoader(train_dataset, num_workers=0, batch_size=batch_size, shuffle=False, drop_last=False)
+    valid_data = DataLoader(valid_dataset, num_workers=0, batch_size=batch_size, shuffle=False, drop_last=False)
 
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     model.to(device)
@@ -50,7 +51,7 @@ def train_LSTM(test_SPK, train_dataset, valid_dataset, exp_output_folder, args):
                 y_head = model(x, h, c)
 
                 loss_val = loss_func(y_head, y)
-                acc_val = metric(y_head, y)
+                acc_val = metric(y_head.squeeze(0), y.squeeze(0))
                 acc_vals.append(acc_val)
 
                 optimizer.zero_grad()
@@ -64,7 +65,7 @@ def train_LSTM(test_SPK, train_dataset, valid_dataset, exp_output_folder, args):
                 x, y = x.type(torch.FloatTensor).to(device), y.type(torch.FloatTensor).to(device)
                 h, c = model.init_hidden(x)
                 h, c = h.to(device), c.to(device)
-                acc_vals.append(metric(model(x, h, c), y))
+                acc_vals.append(metric(model(x, h, c).squeeze(0), y.squeeze(0)))
             avg_vacc = sum(acc_vals) / len(acc_vals)
             SPK = file_id[0][:3]
 

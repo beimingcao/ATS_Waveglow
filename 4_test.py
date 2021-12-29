@@ -8,6 +8,10 @@ from models import MyLSTM
 from models import RegressionLoss
 from models import save_model
 from measures import MCD
+from torch.autograd import Variable
+from sklearn.metrics import mean_squared_error
+from math import sqrt
+from scipy import ndimage
 
 def test_LSTM(test_SPK, test_dataset, exp_output_folder, args):
     config = yaml.load(open(args.conf_dir, 'r'), Loader=yaml.FullLoader)
@@ -30,8 +34,11 @@ def test_LSTM(test_SPK, test_dataset, exp_output_folder, args):
     acc_vals = []
     for file_id, x, y in test_data:
         x, y = x.type(torch.FloatTensor), y.type(torch.FloatTensor)
+
         h, c = model.init_hidden(x)
-        y_head = model(x, h, c)
+        with torch.no_grad():
+            y_head = model(x, h, c)
+
         y_pt = y_head.squeeze(0).T
 
         if save_output == True:
@@ -40,8 +47,8 @@ def test_LSTM(test_SPK, test_dataset, exp_output_folder, args):
                 os.makedirs(outpath)
             torch.save(y_pt, os.path.join(outpath, file_id[0] + '.pt'))
 
-        acc_vals.append(metric(y_head, y))
-    avg_vacc = sum(acc_vals) / len(acc_vals) 
+        acc_vals.append(metric(y.squeeze(0), y_head.squeeze(0)))
+    avg_vacc = sum(acc_vals) / len(acc_vals)
 
     results_out_folder = os.path.join(exp_output_folder, 'RESULTS')
     if not os.path.exists(results_out_folder):
@@ -57,6 +64,7 @@ def test_LSTM(test_SPK, test_dataset, exp_output_folder, args):
 
 if __name__ == '__main__':
     import argparse
+    import matplotlib.pyplot as plt
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--conf_dir', default = 'conf/ATS_conf.yaml')
@@ -73,4 +81,5 @@ if __name__ == '__main__':
         test_dataset = pickle.load(te)
 
         test_LSTM(test_SPK, test_dataset, args.buff_dir, args)
+
 
