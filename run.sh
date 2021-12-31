@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-new_experiment=False
+new_experiment=True
 training=True
 testing=True
 
@@ -13,9 +13,9 @@ current_exp=current_exp
 
 if [ "$new_experiment" = "True" ];then
 echo "New experiments, loading data into current_exp folder"
-rm -rf $current_exp
-python3 0_setup.py --conf_dir $conf_dir --exp_dir $experiments_dir --buff_dir $current_exp
-python3 1_data_prepare.py --conf_dir $conf_dir --buff_dir $current_exp
+#rm -rf $current_exp
+#python3 0_setup.py --conf_dir $conf_dir --exp_dir $experiments_dir --buff_dir $current_exp
+#python3 1_data_prepare.py --conf_dir $conf_dir --buff_dir $current_exp
 python3 2_data_loadin.py --conf_dir $conf_dir --buff_dir $current_exp
 fi
 if [ "$training" = "True" ];then

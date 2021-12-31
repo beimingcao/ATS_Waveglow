@@ -48,7 +48,7 @@ def prepare_Haskins_lists(args):
             exp_test_lists[i] = test_lists
 
     elif exp_type == 'SA':
-        idx = 0
+        idx = 0     
         for train_spk in spk_list:
             spk_fileset_path = os.path.join(fileset_path, train_spk)
             if idx == 0:
@@ -57,11 +57,11 @@ def prepare_Haskins_lists(args):
             else:
                 train_lists = train_lists + read_file_list(os.path.join(spk_fileset_path, 'train_id_list.scp'))
                 valid_lists = valid_lists + read_file_list(os.path.join(spk_fileset_path, 'valid_id_list.scp'))
-            idx += 1
-        for i in range(len(spk_list)):
-            exp_train_lists[i] = train_lists
-            exp_valid_lists[i] = valid_lists            
-            exp_test_lists[i] = read_file_list(os.path.join(spk_fileset_path, 'test_id_list.scp'))            
+
+            exp_train_lists[idx] = train_lists
+            exp_valid_lists[idx] = valid_lists            
+            exp_test_lists[idx] = read_file_list(os.path.join(spk_fileset_path, 'test_id_list.scp')) 
+            idx += 1           
     else:
         raise ValueError('Unrecognized experiment type')
 

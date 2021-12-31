@@ -4,10 +4,10 @@ corpus:
 
 experimental_setup:
   model_type: 'ATS'                     # 'ATS', 'VC', 'AC', 'IV', SSR, TTS
-  experiment_type: 'SD'
+  experiment_type: 'SA'
 
 data_setup:
-  spk_list: ['F01', 'F02'] # ['F01', 'F02', 'F03', 'F04', 'M01', 'M02', 'M03', 'M04']
+  spk_list: ['F01', 'F02', 'F03', 'F04', 'M01', 'M02', 'M03', 'M04'] # ['F01', 'F02', 'F03', 'F04', 'M01', 'M02', 'M03', 'M04']
 
 acoustic_feature:
   sampling_rate: 22050 
