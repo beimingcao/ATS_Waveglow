@@ -9,6 +9,7 @@ from models import RegressionLoss
 from models import save_model
 from measures import MCD
 from torch.autograd import Variable
+from torch.optim.lr_scheduler import StepLR
 
 def train_LSTM(test_SPK, train_dataset, valid_dataset, exp_output_folder, args):
     
@@ -24,10 +25,11 @@ def train_LSTM(test_SPK, train_dataset, valid_dataset, exp_output_folder, args):
     batch_size = config['training_setup']['batch_size']
 
     learning_rate = config['training_setup']['learning_rate']
+    weight_decay = config['training_setup']['weight_decay']
     num_epoch = config['training_setup']['num_epoch']
 
     model = MyLSTM(D_in, hidden_size, D_out, num_layers)
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
     loss_func = RegressionLoss()
     metric = MCD()
 
@@ -40,6 +42,8 @@ def train_LSTM(test_SPK, train_dataset, valid_dataset, exp_output_folder, args):
     if not os.path.exists(train_out_folder):
         os.makedirs(train_out_folder)
     results = os.path.join(train_out_folder, test_SPK + '_train.txt')
+
+    scheduler = StepLR(optimizer, step_size=10, gamma=0.1)
     with open(results, 'w') as r:
         for epoch in range(num_epoch):
             model.train()
@@ -66,6 +70,7 @@ def train_LSTM(test_SPK, train_dataset, valid_dataset, exp_output_folder, args):
                 h, c = model.init_hidden(x)
                 h, c = h.to(device), c.to(device)
                 acc_vals.append(metric(model(x, h, c).squeeze(0), y.squeeze(0)))
+            scheduler.step()
             avg_vacc = sum(acc_vals) / len(acc_vals)
             SPK = file_id[0][:3]
 

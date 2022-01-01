@@ -15,6 +15,15 @@ from scipy import ndimage
 
 def test_LSTM(test_SPK, test_dataset, exp_output_folder, args):
     config = yaml.load(open(args.conf_dir, 'r'), Loader=yaml.FullLoader)
+    sel_sensors = config['articulatory_data']['sel_sensors']
+    sel_dim = config['articulatory_data']['sel_dim'] 
+    delta = config['articulatory_data']['delta']
+    d = 3 if delta == True else 1
+    D_in = len(sel_sensors)*len(sel_dim)*d
+    D_out = config['acoustic_feature']['n_mel_channels']
+    hidden_size = config['training_setup']['hidden_size']
+    num_layers = config['training_setup']['layer_num']
+    batch_size = config['training_setup']['batch_size']
     save_output = config['testing_setup']['save_output']
     synthesis_samples = config['testing_setup']['synthesis_samples']
     metric = MCD()
@@ -27,7 +36,7 @@ def test_LSTM(test_SPK, test_dataset, exp_output_folder, args):
    
     SPK_model_path = os.path.join(model_out_folder)
     model_path = os.path.join(SPK_model_path, test_SPK + '_lstm')
-    model = MyLSTM()
+    model = MyLSTM(D_in, hidden_size, D_out, num_layers)
     model.load_state_dict(torch.load(model_path, map_location='cpu'))
     model.eval()
 

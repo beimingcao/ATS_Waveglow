@@ -4,7 +4,7 @@ corpus:
 
 experimental_setup:
   model_type: 'ATS'                     # 'ATS', 'VC', 'AC', 'IV', SSR, TTS
-  experiment_type: 'SA'
+  experiment_type: 'SD'
 
 data_setup:
   spk_list: ['F01', 'F02', 'F03', 'F04', 'M01', 'M02', 'M03', 'M04'] # ['F01', 'F02', 'F03', 'F04', 'M01', 'M02', 'M03', 'M04']
@@ -30,8 +30,10 @@ training_setup:
   hidden_size: 256
   layer_num: 3
   batch_size: 1
-  learning_rate: 0.0005
-  num_epoch: 20
+  learning_rate: 0.0008
+  scheduler: 
+  weight_decay: 0.0001
+  num_epoch: 30
 
 testing_setup:
   save_model: True
