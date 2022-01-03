@@ -50,6 +50,10 @@ def cleanup(args):
     test_dst = os.path.join(Exp_output_folder)
     cp_dir(test_src, test_dst)
 
+    result_all_src = os.path.join(buff_path, 'results_all.txt')
+    result_all_dst = os.path.join(Exp_output_folder, 'results_all.txt')
+    copyfile(result_all_src, result_all_dst)
+
 
 
 if __name__ == '__main__':
