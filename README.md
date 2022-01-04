@@ -1,2 +1,2 @@
 # ATS_Waveglow
-Organized base code for ATS using Waveglow vocoder
+Organized base code for articulation-to-speech (ATS) synthesis using Waveglow vocoder
