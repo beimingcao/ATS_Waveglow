@@ -56,6 +56,7 @@ class FixMissingValues(object):
         return ema_fixed
 
 class apply_delta_deltadelta(object):
+    # Adopted from nnmnkwii source code https://github.com/r9y9/nnmnkwii
     
     def delta(self, x, window):
 
