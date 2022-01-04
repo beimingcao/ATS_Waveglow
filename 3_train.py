@@ -10,6 +10,15 @@ from models import save_model
 from measures import MCD
 from torch.autograd import Variable
 from torch.optim.lr_scheduler import StepLR
+import random
+
+seed = 123
+torch.manual_seed(seed)
+torch.cuda.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)
+random.seed(seed)
+torch.backends.cudnn.benchmark = False
+torch.backends.cudnn.deterministic = True
 
 def train_LSTM(test_SPK, train_dataset, valid_dataset, exp_output_folder, args):
     
@@ -33,8 +42,8 @@ def train_LSTM(test_SPK, train_dataset, valid_dataset, exp_output_folder, args):
     loss_func = RegressionLoss()
     metric = MCD()
 
-    train_data = DataLoader(train_dataset, num_workers=0, batch_size=batch_size, shuffle=False, drop_last=False)
-    valid_data = DataLoader(valid_dataset, num_workers=0, batch_size=batch_size, shuffle=False, drop_last=False)
+    train_data = DataLoader(train_dataset, num_workers=0, batch_size=batch_size, shuffle=True, drop_last=False)
+    valid_data = DataLoader(valid_dataset, num_workers=0, batch_size=batch_size, shuffle=True, drop_last=False)
 
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     model.to(device)
@@ -43,7 +52,7 @@ def train_LSTM(test_SPK, train_dataset, valid_dataset, exp_output_folder, args):
         os.makedirs(train_out_folder)
     results = os.path.join(train_out_folder, test_SPK + '_train.txt')
 
-    scheduler = StepLR(optimizer, step_size=10, gamma=0.1)
+    scheduler = StepLR(optimizer, step_size=10, gamma=0.6)
     with open(results, 'w') as r:
         for epoch in range(num_epoch):
             model.train()

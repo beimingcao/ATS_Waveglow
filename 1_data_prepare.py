@@ -5,7 +5,7 @@ import torch
 from utils.IO_func import read_file_list, load_binary_file, array_to_binary_file, load_Haskins_ATS_data
 from shutil import copyfile
 from utils.transforms import Pair_Transform_Compose
-from utils.transforms import Fix_EMA_MissingValues_ATS, apply_delta_deltadelta_EMA_ATS, ProcrustesMatching_ATS, wav2melspec_ATS, change_wav_sampling_rate_ATS, ema_wav_length_match, padding_end, apply_EMA_MVN
+from utils.transforms import Fix_EMA_MissingValues_ATS, apply_delta_deltadelta_EMA_ATS, ProcrustesMatching_ATS, wav2melspec_ATS, change_wav_sampling_rate_ATS, ema_wav_length_match, padding_end, apply_EMA_MVN, zero_padding_end
 
 def data_processing(args):
 

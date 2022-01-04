@@ -252,6 +252,18 @@ class padding_end(object):
         ema_padded, wav_padded = torch.cat((ema_tensor, ema_pad), dim = 0), torch.cat((wav, wav_pad), dim = 0)
         return ema_padded, wav_padded
 
+class zero_padding_end(object):
+    def __init__(self, max_len = 240):
+        self.max_len = max_len
+    
+    def __call__(self, ema, wav):
+        ema_tensor = torch.tensor(ema)
+        pad_len = self.max_len - ema_tensor.shape[0]
+        ema_pad_row, wav_pad_row = torch.zeros(ema.shape[1]), torch.zeros(wav.shape[1])
+        ema_pad, wav_pad = ema_pad_row.expand(pad_len, -1), wav_pad_row.expand(pad_len, -1)
+        ema_padded, wav_padded = torch.cat((ema_tensor, ema_pad), dim = 0), torch.cat((wav, wav_pad), dim = 0)
+        return ema_padded, wav_padded
+
 class apply_EMA_MVN(object):
     def __init__(self, X_mean, X_std):
         self.X_mean = X_mean

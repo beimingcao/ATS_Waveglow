@@ -5,6 +5,16 @@ from torch import optim
 import torch.nn.functional as F
 import librosa
 import numpy as np
+import random
+
+seed = 123
+torch.manual_seed(seed)
+torch.cuda.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)
+np.random.seed(seed)
+random.seed(seed)
+torch.backends.cudnn.benchmark = False
+torch.backends.cudnn.deterministic = True
 
 def save_model(model, outpath):
     from torch import save

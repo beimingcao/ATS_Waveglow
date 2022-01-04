@@ -8,7 +8,7 @@ conf_dir=conf/ATS_conf.yaml
 experiments_dir=experiments
 current_exp=current_exp
 
-stage=3
+stage=0
 
 if [ $stage -le 0 ];then
 echo "New experiments, converting data in binary type, and put into current_exp folder, apply sample-level transforms"
@@ -19,6 +19,9 @@ fi
 
 if [ $stage -le 1 ];then
 rm -rf $current_exp/data_CV
+rm -rf $current_exp/RESULTS
+rm -rf $current_exp/testing
+rm -rf $current_exp/results_all.txt
 echo "Load data into pickle files for future usage, applying transforms that needs information from training set only, like MVN"
 python3 2_data_loadin.py --conf_dir $conf_dir --buff_dir $current_exp
 fi

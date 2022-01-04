@@ -67,6 +67,7 @@ def test_LSTM(test_SPK, test_dataset, exp_output_folder, args):
     with open(results, 'w') as r:
         print('MCD = %0.3f' % avg_vacc, file = r)
     r.close()
+    return avg_vacc
        
 
 
@@ -84,11 +85,13 @@ if __name__ == '__main__':
     data_path = os.path.join(args.buff_dir, 'data_CV')
     SPK_list = config['data_setup']['spk_list']
 
-    for test_SPK in SPK_list:
-        data_path_SPK = os.path.join(data_path, test_SPK)
-        te = open(os.path.join(data_path_SPK, 'test_data.pkl'), 'rb')
-        test_dataset = pickle.load(te)
-
-        test_LSTM(test_SPK, test_dataset, args.buff_dir, args)
-
-
+    results_all = os.path.join(args.buff_dir, 'results_all.txt')
+    with open(results_all, 'w') as r:
+        for test_SPK in SPK_list:
+            data_path_SPK = os.path.join(data_path, test_SPK)
+            te = open(os.path.join(data_path_SPK, 'test_data.pkl'), 'rb')
+            test_dataset = pickle.load(te)
+            avg_vacc = test_LSTM(test_SPK, test_dataset, args.buff_dir, args)
+            print(test_SPK, '\t', file = r)
+            print('MCD = %0.3f' % avg_vacc, file = r)
+    r.close()

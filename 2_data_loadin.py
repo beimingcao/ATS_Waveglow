@@ -9,7 +9,16 @@ from utils.transforms import Pair_Transform_Compose
 from utils.IO_func import read_file_list, load_binary_file, array_to_binary_file, load_Haskins_ATS_data
 from utils.utils import prepare_Haskins_lists
 from shutil import copyfile
-from utils.transforms import padding_end, apply_EMA_MVN
+from utils.transforms import padding_end, apply_EMA_MVN, zero_padding_end
+import random
+
+seed = 123
+torch.manual_seed(seed)
+torch.cuda.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)
+random.seed(seed)
+torch.backends.cudnn.benchmark = False
+torch.backends.cudnn.deterministic = True
 
 
 if __name__ == '__main__':
@@ -61,8 +70,10 @@ if __name__ == '__main__':
             valid_dataset = HaskinsData_ATS(prepared_data_path, valid_list, ema_dim)
   #          max_len = max(train_dataset.find_max_len(), valid_dataset.find_max_len())
             max_len = 340
-            train_transforms.append(padding_end(max_len))
-            valid_transforms.append(padding_end(max_len))    
+  #          train_transforms.append(padding_end(max_len))
+  #          valid_transforms.append(padding_end(max_len))    
+            train_transforms.append(zero_padding_end(max_len))
+            valid_transforms.append(zero_padding_end(max_len))
 
         train_dataset = HaskinsData_ATS(prepared_data_path, train_list, ema_dim, transforms = Pair_Transform_Compose(train_transforms))
         valid_dataset = HaskinsData_ATS(prepared_data_path, valid_list, ema_dim, transforms = Pair_Transform_Compose(valid_transforms))
